@@ -14,6 +14,8 @@ class Sku extends \Magento\ImportExport\Model\Import\Entity\AbstractEntity
 
     const NEW_SKU = 'new_sku';
 
+    const TABLE_ENTITY = 'catalog_product_entity';
+
     /**
      * Validation failure message template definitions
      *
@@ -71,7 +73,8 @@ class Sku extends \Magento\ImportExport\Model\Import\Entity\AbstractEntity
         \Magento\ImportExport\Model\ResourceModel\Helper $resourceHelper,
         \Magento\Framework\Stdlib\StringUtils $string,
         ProcessingErrorAggregatorInterface $errorAggregator,
-        \Magento\Catalog\Api\Data\ProductInterfaceFactory $productFactory
+        \Magento\Catalog\Api\Data\ProductInterfaceFactory $productFactory,
+        \Magento\Framework\ObjectManagerInterface $objectmanager
     ) {
         $this->jsonHelper = $jsonHelper;
         $this->_importExportData = $importExportData;
@@ -81,6 +84,7 @@ class Sku extends \Magento\ImportExport\Model\Import\Entity\AbstractEntity
         $this->_productFactory = $productFactory;
         $this->_connection = $resource->getConnection(\Magento\Framework\App\ResourceConnection::DEFAULT_CONNECTION);
         $this->errorAggregator = $errorAggregator;
+        $this->_objectManager = $objectmanager;
 
         $this->_initErrorTemplates();
     }
@@ -97,7 +101,7 @@ class Sku extends \Magento\ImportExport\Model\Import\Entity\AbstractEntity
      */
     public function getEntityTypeCode()
     {
-        return 'Raghu_skuupdate';
+        return 'raghu_skuupdate';
     }
 
     /**
@@ -164,6 +168,7 @@ class Sku extends \Magento\ImportExport\Model\Import\Entity\AbstractEntity
      */
     protected function updateEntity()
     {
+        $tableName = $this->_connection->getTableName(self::TABLE_ENTITY);
         $behavior = $this->getBehavior();
         $listTitle = [];
         $new_sku_list = [];
@@ -193,7 +198,6 @@ class Sku extends \Magento\ImportExport\Model\Import\Entity\AbstractEntity
                     continue;
                 }
 
-
                 $rowTtile= $rowData[self::OLD_SKU];
                 $listTitle[] = $rowTtile;
                 $entityList[$rowTtile][] = [
@@ -210,14 +214,11 @@ class Sku extends \Magento\ImportExport\Model\Import\Entity\AbstractEntity
 
                 if(!empty($product->getData())) {
 
-                    $product->setSku($value[0][self::NEW_SKU]);
-                    $product->save();
+                    $product = array('entity_id'=>$product->getId(),'sku'=>$value[0][self::NEW_SKU]);
+                    $this->_connection->insertOnDuplicate($tableName, $_product, ['entity_id','sku']);
                 }
-
             }
-
         }
-
         return $this;
     }
 

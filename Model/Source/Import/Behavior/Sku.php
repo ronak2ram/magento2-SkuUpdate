@@ -28,6 +28,6 @@ class Sku extends \Magento\ImportExport\Model\Source\Import\AbstractBehavior
      */
     public function getCode()
     {
-        return 'custom';
+        return 'raghu_skuupdate_update_only';
     }
 }

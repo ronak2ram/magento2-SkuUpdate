@@ -61,7 +61,7 @@ class Download
         $subject,
         $result
     ) {
-        if ($this->requestInterface->getParam('filename') == 'Raghu_skuupdate') {
+        if ($this->requestInterface->getParam('filename') == 'raghu_skuupdate') {
             $fileName = $this->requestInterface->getParam('filename') . '.csv';
             $moduleDir = $this->reader->getModuleDir('', 'Raghu_SkuUpdate');;
             $fileAbsolutePath = $moduleDir . '/Files/Sample/' . $fileName;
