@@ -212,8 +212,8 @@ class Sku extends \Magento\ImportExport\Model\Import\Entity\AbstractEntity
 
                 if(!empty($product->getData())) {
 
-                    $product = array('entity_id'=>$product->getId(),'sku'=>$value[0][self::NEW_SKU]);
-                    $this->_connection->insertOnDuplicate($tableName, $_product, ['entity_id','sku']);
+                    $product_update = array('entity_id'=>$product->getId(),'sku'=>$value[0][self::NEW_SKU]);
+                    $this->_connection->insertOnDuplicate($tableName, $product_update, ['entity_id','sku']);
                 }
             }
         }
