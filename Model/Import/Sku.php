@@ -73,8 +73,7 @@ class Sku extends \Magento\ImportExport\Model\Import\Entity\AbstractEntity
         \Magento\ImportExport\Model\ResourceModel\Helper $resourceHelper,
         \Magento\Framework\Stdlib\StringUtils $string,
         ProcessingErrorAggregatorInterface $errorAggregator,
-        \Magento\Catalog\Api\Data\ProductInterfaceFactory $productFactory,
-        \Magento\Framework\ObjectManagerInterface $objectmanager
+        \Magento\Catalog\Api\Data\ProductInterfaceFactory $productFactory
     ) {
         $this->jsonHelper = $jsonHelper;
         $this->_importExportData = $importExportData;
@@ -84,7 +83,6 @@ class Sku extends \Magento\ImportExport\Model\Import\Entity\AbstractEntity
         $this->_productFactory = $productFactory;
         $this->_connection = $resource->getConnection(\Magento\Framework\App\ResourceConnection::DEFAULT_CONNECTION);
         $this->errorAggregator = $errorAggregator;
-        $this->_objectManager = $objectmanager;
 
         $this->_initErrorTemplates();
     }
