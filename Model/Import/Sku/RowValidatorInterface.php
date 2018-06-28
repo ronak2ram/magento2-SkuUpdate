@@ -11,6 +11,8 @@ interface RowValidatorInterface extends \Magento\Framework\Validator\ValidatorIn
 
     const ERROR_INVALID_NEW_SKU = 'invalidNewSku';
 
+    const ERROR_OLD_SKU_NOT_FOUND = 'existNotfound';
+
     const ERROR_NEW_SKU_ALREADY_AVAILABLE = 'existNewSku';
 
   	const ERROR_NEW_SKU_DUPLICATE = 'duplicateSku';
