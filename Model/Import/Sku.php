@@ -167,14 +167,13 @@ class Sku extends \Magento\ImportExport\Model\Import\Entity\AbstractEntity
      */
     protected function updateEntity()
     {
-        $tableName = $this->_connection->getTableName(self::TABLE_ENTITY);
+        $tableName = $this->_resource->getTableName(self::TABLE_ENTITY);
         $behavior = $this->getBehavior();
         $listTitle = [];
         $new_sku_list = [];
         while ($bunch = $this->_dataSourceModel->getNextBunch()) {
             $entityList = [];
             foreach ($bunch as $rowNum => $rowData) {
-
 
                 if (!$this->validateRow($rowData, $rowNum)) {
                     $this->addRowError(ValidatorInterface::ERROR_TITLE_IS_EMPTY, $rowNum);
@@ -185,15 +184,17 @@ class Sku extends \Magento\ImportExport\Model\Import\Entity\AbstractEntity
                     $this->addRowError(ValidatorInterface::ERROR_NEW_SKU_DUPLICATE, $rowNum);
                     continue;
                 }
+
                 array_push($new_sku_list, $rowData[self::NEW_SKU]);
 
                 if ($this->isSkuAvailableforInsert($rowData[self::OLD_SKU])) {
-                    /*Old Product not found in database*/
+                    /* Old Product not found in database */
                     $this->addRowError(ValidatorInterface::ERROR_OLD_SKU_NOT_FOUND, $rowNum);
                     continue;
                 }
+
                 if (!$this->isSkuAvailableforInsert($rowData[self::NEW_SKU])) {
-                    /*New Product found in database*/
+                    /* New Product found in database */
                     $this->addRowError(ValidatorInterface::ERROR_NEW_SKU_ALREADY_AVAILABLE, $rowNum);
                     continue;
                 }
@@ -221,8 +222,9 @@ class Sku extends \Magento\ImportExport\Model\Import\Entity\AbstractEntity
                 if (!empty($product->getData())) {
 
                     if ($this->isSkuAvailableforInsert($value[0][self::NEW_SKU])) {
-                        $product_update = array('entity_id'=>$product->getId(),'sku'=>$value[0][self::NEW_SKU]);
-                        $this->_connection->insertOnDuplicate($tableName, $product_update, ['entity_id','sku']);
+
+                        $product_update = array('row_id'=>$product->getRowId(),'sku'=>$value[0][self::NEW_SKU]);
+                        $this->_connection->insertOnDuplicate($tableName, $product_update, ['row_id','sku']);
                     } else {
                         $this->addRowError(ValidatorInterface::ERROR_NEW_SKU_ALREADY_AVAILABLE, $value[0]['rowNum']);
                     }
